@@ -1,0 +1,16 @@
+﻿@using MVCTest.Models;
+
+@helper FillAllUnits(MVCTest.Models.CalculateModel model)
+{
+    for (Units i = 0; i < Units.Zetta; i++)
+    {
+        <tr>
+            <td>@(i != Units.Base ? i.ToString() : "")bit </td>
+            <td>@(model.NormalizedValue / Math.Pow(model.Kilo, (int)i))</td>
+        </tr>
+        <tr>
+            <td>@(i != Units.Base ? i.ToString() : "")byte</td>
+            <td>@(model.NormalizedValue / (8 * Math.Pow(model.Kilo, (int)i)))</td>
+        </tr>
+    }
+}
