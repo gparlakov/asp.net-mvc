@@ -1,0 +1,24 @@
+﻿@using MVCTest.Models;
+
+@model MVCTest.Models.CalculateModel
+
+<div class="span4">
+    <table class="table">
+        <tr>
+            <th>In Unit</th>
+            <th>Value</th>
+        </tr>
+        @for (Units i = 0; i < Units.Zetta; i++)
+        {
+            <tr>
+                <td>@(i != Units.Base ? i.ToString() : "")bit </td>
+                <td>@(Model.NormalizedValue / Math.Pow(Model.Kilo, (int)i))</td>
+            </tr>
+            <tr>
+                <td>@(i != Units.Base ? i.ToString() : "")byte</td>
+                <td>@(Model.NormalizedValue / (8 * Math.Pow(Model.Kilo, (int)i)))</td>
+            </tr>
+        }
+    </table>
+</div>
+

@@ -2,7 +2,7 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="hero-unit">
+<div class="page-header">
     <h1>
         <img src="~/img/binaryIcon.png" />
         BitCalculator
@@ -10,35 +10,48 @@
 </div>
 <div class="row">
     <div class="span4">
-        <h2>Getting started</h2>
         <div>
             @using (Ajax.BeginForm("Calculate", new AjaxOptions
             {
                 HttpMethod = "POST",
-                InsertionMode = InsertionMode.Replace,
                 UpdateTargetId = "result",
+                InsertionMode= InsertionMode.Replace
             }))
             {
+                <label for="number">Value</label>
                 <input id="number" name="number" type="number" value="1"/>
+                
+                <label for="unit">Unit</label>
                 <select id="unit" name="unit">
-                    <option value="0">Bit</option>
-                    <option value="1">Byte</option>
-                    <option value="2">KiloBit</option>
+                    <option value="01">Bit</option>
+                    <option value="08">Byte</option>
+                    <option value="11">KiloBit</option>
+                    <option value="18">KiloByte</option>
+                    <option value="21">MegaBit</option>
+                    <option value="28">MegaByte</option>
+                    <option value="31">GigaBit</option>
+                    <option value="38">GigaByte</option>
+                    <option value="41">TeraBit</option>
+                    <option value="48">TeraByte</option>
+                    <option value="51">PetaBit</option>
+                    <option value="58">PetaByte</option>
+                    <option value="61">ExaBit</option>
+                    <option value="68">ExaByte</option>
+                    <option value="71">ZettaBit</option>
+                    <option value="78">ZettaByte</option>
+                    <option value="81">YottaBit</option>
+                    <option value="88">YottaByte</option>
                 </select>
-                <input type="submit" />
+                
+                <label for="kilo">Kilo? Storage or Network</label>
+                <select name="kilo" id="kilo">
+                    <option value="1000">1000 - Network</option>
+                    <option value="1024">1024 - Storage</option>
+                </select>
+                
+                <input type="submit" value="СмЯтай"/>
             }
         </div>
-        <p id="result"></p>
-        @*<p><a class="btn" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>*@
     </div>
-    @*<div class="span4">
-            <h2>Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </div>
-        <div class="span4">
-            <h2>Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </div>*@
+    <div id="result" class="span8"></div>
 </div>

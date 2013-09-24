@@ -14,21 +14,22 @@ namespace MVCTest.Controllers
 
         public ActionResult Calculate(RequestModel model)
         {
-            return PartialView("_CalculatePartialPage", model);
+            var calculateModel = GetNormalValue(model);
+            return PartialView("PartialCalculate", calculateModel);
         }
 
-        public ActionResult About()
+        private CalculateModel GetNormalValue(RequestModel model)
         {
-            ViewBag.Message = "Your application description page.";
+            Units unit = (Units)int.Parse(model.Unit.Substring(0,1));
+            var bit = int.Parse(model.Unit.Substring(1, 1));
+            double value = model.Number* Math.Pow(model.Kilo, (int)unit) * bit;
 
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            return new CalculateModel 
+            { 
+                NormalizedValue = value, 
+                Unit = unit,
+                Kilo = model.Kilo
+            };
         }
     }
 }
