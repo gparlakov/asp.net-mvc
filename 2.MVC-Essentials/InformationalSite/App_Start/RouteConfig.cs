@@ -20,7 +20,7 @@ namespace InformationalSite
                 },
                 constraints: new 
                 {
-                    pre = "admi"
+                    pre = "admi" /// the {pre} and {controller} must be separated by a string literal so -> {admi}n{controller}
                 }
             );
 
