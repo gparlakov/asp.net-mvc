@@ -16,5 +16,7 @@ namespace Movies.Models
         public virtual Actor LeadingActress { get; set; }
 
         public virtual Director Director { get; set; }
+
+        public virtual Studio Studio { get; set; }
     }
 }
