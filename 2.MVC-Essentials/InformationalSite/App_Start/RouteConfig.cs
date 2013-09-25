@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -12,6 +10,20 @@ namespace InformationalSite
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
+            routes.MapRoute(
+                name: "AdminStart",
+                url: "{pre}n{controller}/{action}/{id}",
+                defaults: new 
+                { 
+                    id = UrlParameter.Optional
+                },
+                constraints: new 
+                {
+                    pre = "admi"
+                }
+            );
+
 
             //
             // MotoSpecialRoute/Moto/123 - 3 digits
