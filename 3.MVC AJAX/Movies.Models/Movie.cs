@@ -5,10 +5,14 @@ namespace Movies.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required, 
+        StringLength(150, MinimumLength = 1, 
+            ErrorMessage="Movie Title is 1 to 150 symbols long")]
         public string Title { get; set; }
 
-        [Required, RegularExpression(@"^(19[\d][\d]|20[\d]{2})$", ErrorMessage="year is between 1920 and 2013")]
+        [Required, 
+        RegularExpression(@"^(19[2-9][\d]|20[0-1][\d])$", 
+            ErrorMessage="year is between 1920 and 2019")]
         public string Year { get; set; }
 
         public virtual Actor LeadingActor { get; set; }

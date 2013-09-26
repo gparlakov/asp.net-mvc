@@ -1,0 +1,63 @@
+﻿@model Movies.ViewModels.MovieViewModels.MovieDetailsVM
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>ViewBag.Title</h2>
+
+<fieldset>
+    <legend>MovieDetailsVM</legend>
+    <dl>
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Year)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LeadingActor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LeadingActor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LeadingActress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LeadingActress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Director)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Director)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Studio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Studio)
+        </dd>
+    </dl>
+</fieldset>
+<p>
+    @Html.ActionLink("Back to List", "All")
+</p>
