@@ -7,7 +7,7 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
@@ -31,38 +31,41 @@
 			</div>
 		</div>
         
-        @if(Model.Actors != null){
+        @if (Model.Actors != null)
+        {
             <div class="control-group">
                 @Html.LabelFor(model => model.LeadingActorId, new { @class = "control-label" })
                 <div class="controls">
-                    @Html.DropDownListFor(model => model.LeadingActorId, 
-                        Model.Actors.Select( a => new SelectListItem 
-                        { 
-                            Value = a.Id.ToString(), 
-                            Text = a.Name 
+                    @Html.DropDownListFor(model => model.LeadingActorId,
+                        Model.Actors.Select(a => new SelectListItem
+                        {
+                            Value = a.Id.ToString(),
+                            Text = a.Name
                         }),
                         "No selected Actor")
                 </div>
             </div>
         }
 
-        @if(Model.Actresses != null){
+        @if (Model.Actresses != null)
+        {
             <div class="control-group">
                 @Html.LabelFor(model => model.LeadingActressId, new { @class = "control-label" })
                 <div class="controls">
-                    @Html.DropDownListFor(model => model.LeadingActressId, 
-                        Model.Actresses.Select( a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name }), 
+                    @Html.DropDownListFor(model => model.LeadingActressId,
+                        Model.Actresses.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name }),
                         "No selected Actress")
                 </div>
             </div>
         }
 
-        @if(Model.Directors != null){
+        @if (Model.Directors != null)
+        {
             <div class="control-group">
                 @Html.LabelFor(model => model.DirectorId, new { @class = "control-label" })
                 <div class="controls">
-                    @Html.DropDownListFor(model => model.DirectorId, 
-                        Model.Directors.Select( a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name }),
+                    @Html.DropDownListFor(model => model.DirectorId,
+                        Model.Directors.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name }),
                         "No selected Director")
                 </div>
             </div>
@@ -73,12 +76,3 @@
         </div>
     </fieldset>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "All")
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
-

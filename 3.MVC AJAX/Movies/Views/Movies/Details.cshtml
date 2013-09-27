@@ -1,63 +1,60 @@
 ﻿@model Movies.ViewModels.MovieViewModels.MovieDetailsVM
+<div id="movie-details-@Model.Title">
+    <h2>@Model.Title</h2>
 
-@{
-    ViewBag.Title = "Details";
-}
+    <fieldset>
+        <legend>Details </legend>
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
 
-<h2>ViewBag.Title</h2>
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
 
-<fieldset>
-    <legend>MovieDetailsVM</legend>
-    <dl>
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Year)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Year)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Year)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.LeadingActor)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Year)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.LeadingActor)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LeadingActor)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.LeadingActress)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.LeadingActor)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.LeadingActress)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LeadingActress)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Director)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.LeadingActress)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Director)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Director)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Studio)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Director)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Studio)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Studio)
-        </dd>
-    </dl>
-</fieldset>
-<p>
-    @Html.ActionLink("Back to List", "All")
-</p>
+            <dd>
+                @Html.DisplayFor(model => model.Studio)
+            </dd>
+        </dl>
+    </fieldset>
+    <p>
+        <button class="close-details-button">Close</button>
+    </p>
+</div>

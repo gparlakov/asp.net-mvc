@@ -37,7 +37,7 @@ namespace Movies.Controllers
         {
             var model = GetCreateViewModel();
 
-            return View(model);
+            return PartialView(model);
         }
 
         //
@@ -59,7 +59,7 @@ namespace Movies.Controllers
                 try
                 {
                     this.dbContext.SaveChanges();
-                    ViewBag.Info = "Created!";
+                    return Content("Created!");
                 }
                 catch(Exception ex)
                 {
@@ -68,10 +68,10 @@ namespace Movies.Controllers
                     {
                         message = ex.InnerException.Message;
                     }
-                    ViewBag.Error = message;
+                    return Content(message);
                 }
             }
-            return this.Create();
+            return Content("Errors in model");
         }
 
         //
@@ -82,11 +82,11 @@ namespace Movies.Controllers
         {
             if (id == null)
             {
-               return Redirect("~/Movies/All");
+                return Content("Select a moview please");
             }
             var movie = GetMovieEditModel(id);
 
-            return View(movie);
+            return PartialView(movie);
         }
 
         //
@@ -131,7 +131,7 @@ namespace Movies.Controllers
             }
 
             var movie = GetDetails(id);
-            return View(movie);
+            return PartialView(movie);
         }
 
         //
@@ -140,7 +140,7 @@ namespace Movies.Controllers
         {
             if (id == null)
             {
-                return Redirect("~/Movies/All");
+                return Content("No movie seleted!");
             }
             try
             {
@@ -157,7 +157,7 @@ namespace Movies.Controllers
                 ViewBag.Error = message;
             }
 
-            return RedirectToAction("All");
+            return Content(ViewBag.Error ?? ViewBag.Info);
         }
 
         #region Private methods

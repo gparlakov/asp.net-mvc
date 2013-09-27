@@ -275,7 +275,7 @@ namespace Movies.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("All", "Movies");
         }
 
         //
