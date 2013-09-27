@@ -1,0 +1,63 @@
+﻿@model Movies.ViewModels.ActorViewModels.HWPersonVM
+@{
+    ViewBag.Title = "Edit";
+}
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset class="form-horizontal">
+        <legend>Actor</legend>
+
+        <div class="control-group">
+            @Html.LabelFor(model => model.Name, new { @class = "control-label" })
+            <div class="controls">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name, null, new { @class = "help-inline" })
+            </div>
+        </div>
+
+        <div class="control-group">
+           
+            @Html.LabelFor(model => model.BirthDate, new { @class = "control-label" })
+            <div class="controls">
+                <input id="BirthDate"
+                       type="text"
+                       name="BirthDate"
+                       class="input-validation-error"
+                       placeholder="dd-mm-yyyy"
+                       data-val="true"
+                       data-val-required="The BirthDate field is required."
+                       data-val-regex="Date is between 01-01-1850 and 12-12-2012"
+                       data-val-regex-pattern="^([0-2][0-9]|30|31)-(0[\d]|1[0-2])-(18[5-9][\d]|19[\d]{2}|200[\d]|201[0-2])$"
+                       value='@Model.BirthDate.ToString("dd-mm-yyyy")' />
+
+                @Html.ValidationMessageFor(model => model.BirthDate, null, new { @class = "help-inline" })
+            </div>
+            <span></span>
+        </div>
+
+
+        <div class="control-group">
+            <label class="control-label" for="Sex">Sex</label>
+            <div class="controls">
+                <select name="sex">
+                    <option value="male" selected='@(Model.Sex == "male"? "selected" : "false")'>Male</option>
+                    <option value="female" selected='@(Model.Sex == "female"? "selected" : "false")'>Female</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Create" class="btn" />
+        </div>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "All")
+</div>
+

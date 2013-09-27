@@ -10,13 +10,14 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Movies.Models;
+using System.Diagnostics;
 
 namespace Movies.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
-        public AccountController() 
+        public AccountController()
         {
             IdentityManager = new AuthenticationIdentityManager(new IdentityStore(new ApplicationDbContext()));
         }
@@ -28,8 +29,10 @@ namespace Movies.Controllers
 
         public AuthenticationIdentityManager IdentityManager { get; private set; }
 
-        private Microsoft.Owin.Security.IAuthenticationManager AuthenticationManager {
-            get {
+        private Microsoft.Owin.Security.IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
                 return HttpContext.GetOwinContext().Authentication;
             }
         }
@@ -85,7 +88,7 @@ namespace Movies.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Create a local login before signing in the user
+                 // Create a local login before signing in the user
                 var user = new ApplicationUser()
                 {
                     UserName = model.UserName
@@ -100,6 +103,7 @@ namespace Movies.Controllers
                 {
                     AddErrors(result);
                 }
+               
             }
 
             // If we got this far, something failed, redisplay form
@@ -147,7 +151,7 @@ namespace Movies.Controllers
             ViewBag.HasLocalPassword = hasLocalLogin;
             ViewBag.ReturnUrl = Url.Action("Manage");
             if (hasLocalLogin)
-            {               
+            {
                 if (ModelState.IsValid)
                 {
                     IdentityResult result = await IdentityManager.Passwords.ChangePasswordAsync(User.Identity.GetUserName(), model.OldPassword, model.NewPassword);
@@ -208,7 +212,7 @@ namespace Movies.Controllers
             ClaimsIdentity id = await IdentityManager.Authentication.GetExternalIdentityAsync(AuthenticationManager);
             // Sign in this external identity if its already linked
             IdentityResult result = await IdentityManager.Authentication.SignInExternalIdentityAsync(AuthenticationManager, id);
-            if (result.Success) 
+            if (result.Success)
             {
                 return RedirectToLocal(returnUrl);
             }
@@ -220,7 +224,7 @@ namespace Movies.Controllers
                 {
                     return RedirectToLocal(returnUrl);
                 }
-                else 
+                else
                 {
                     return View("ExternalLoginFailure");
                 }
@@ -245,7 +249,7 @@ namespace Movies.Controllers
             {
                 return RedirectToAction("Manage");
             }
-            
+
             if (ModelState.IsValid)
             {
                 // Get the information about the user from the external login provider
@@ -271,7 +275,7 @@ namespace Movies.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("All", "Movies");
         }
 
         //
@@ -301,8 +305,10 @@ namespace Movies.Controllers
             }).Result;
         }
 
-        protected override void Dispose(bool disposing) {
-            if (disposing && IdentityManager != null) {
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && IdentityManager != null)
+            {
                 IdentityManager.Dispose();
                 IdentityManager = null;
             }
@@ -310,8 +316,10 @@ namespace Movies.Controllers
         }
 
         #region Helpers
-        private void AddErrors(IdentityResult result) {
-            foreach (var error in result.Errors) {
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
                 ModelState.AddModelError("", error);
             }
         }

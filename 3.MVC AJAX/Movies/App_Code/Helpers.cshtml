@@ -1,0 +1,10 @@
+﻿@helper GetAge(DateTime birthDate)
+{
+    if (birthDate == DateTime.Now)
+    {
+        @:(unknown age)
+    }
+    else{
+        @((DateTime.Now - birthDate).Days / 365)
+    }
+}

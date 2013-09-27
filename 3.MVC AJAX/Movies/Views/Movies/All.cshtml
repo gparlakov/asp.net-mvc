@@ -1,0 +1,64 @@
+@model IEnumerable<Movies.ViewModels.MovieVM>
+
+@{
+    ViewBag.Title = "All";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    @Ajax.ActionLink("Create New", "Create", new AjaxOptions {
+        UpdateTargetId = "create-form"
+    })
+    <div id="create-form">
+
+    </div>
+</div>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Year)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr id="movie-row-@item.Id">
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Year)
+        </td>
+        <td>
+            @Ajax.ActionLink("Edit", "Edit/" + item.Id, new AjaxOptions{
+                UpdateTargetId = "info-row-" + item.Id,
+                InsertionMode = InsertionMode.Replace
+            }) |
+            @Ajax.ActionLink("Details", "Details/" + item.Id, new AjaxOptions{
+               InsertionMode = InsertionMode.Replace,
+               UpdateTargetId= "info-row-"+item.Id
+            }) |            
+            @Ajax.ActionLink("Delete", "Delete/" + item.Id, new AjaxOptions{
+               Confirm="Delete?",
+               InsertionMode = InsertionMode.Replace,
+               UpdateTargetId = "movie-row-" + item.Id
+            })
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3" id="info-row-@item.Id"></td>
+    </tr>
+}
+</table>
+
+<script>
+    $(function () {
+        $('body').on('click', '.close-details-button', function () {
+            $(this).parent().parent().remove();
+        })
+    })
+</script>

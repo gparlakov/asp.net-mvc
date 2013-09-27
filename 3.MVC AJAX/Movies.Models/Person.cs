@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace Movies.Models
 {
     public class Person
@@ -8,7 +10,9 @@ namespace Movies.Models
         [Required]
         public Sex Sex { get; set; }
 
-        [Required, RegularExpression(@"[\w\b]{5,100}", ErrorMessage = "Name is 5 to 100 symbols long!")]
+        [Required, RegularExpression(@"[\w\s'-]{5,100}", ErrorMessage = "Name is 5 to 100 symbols long!")]
         public string Name { get; set; }
+
+        public DateTime? BirthDate { get; set; }
     }
 }

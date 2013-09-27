@@ -1,0 +1,78 @@
+@model Movies.ViewModels.CreateMovieVM
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset class="form-horizontal">
+        <legend>Movie</legend>
+
+        <div class="control-group">
+            @Html.LabelFor(model => model.Title, new { @class = "control-label" })
+			<div class="controls">
+				@Html.EditorFor(model => model.Title)
+				@Html.ValidationMessageFor(model => model.Title, null, new { @class = "help-inline" })
+			</div>
+		</div>
+
+        <div class="control-group">
+            @Html.LabelFor(model => model.Year, new { @class = "control-label" })
+			<div class="controls">
+				@Html.EditorFor(model => model.Year)
+				@Html.ValidationMessageFor(model => model.Year, null, new { @class = "help-inline" })
+			</div>
+		</div>
+        
+        @if (Model.Actors != null)
+        {
+            <div class="control-group">
+                @Html.LabelFor(model => model.LeadingActorId, new { @class = "control-label" })
+                <div class="controls">
+                    @Html.DropDownListFor(model => model.LeadingActorId,
+                        Model.Actors.Select(a => new SelectListItem
+                        {
+                            Value = a.Id.ToString(),
+                            Text = a.Name
+                        }),
+                        "No selected Actor")
+                </div>
+            </div>
+        }
+
+        @if (Model.Actresses != null)
+        {
+            <div class="control-group">
+                @Html.LabelFor(model => model.LeadingActressId, new { @class = "control-label" })
+                <div class="controls">
+                    @Html.DropDownListFor(model => model.LeadingActressId,
+                        Model.Actresses.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name }),
+                        "No selected Actress")
+                </div>
+            </div>
+        }
+
+        @if (Model.Directors != null)
+        {
+            <div class="control-group">
+                @Html.LabelFor(model => model.DirectorId, new { @class = "control-label" })
+                <div class="controls">
+                    @Html.DropDownListFor(model => model.DirectorId,
+                        Model.Directors.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name }),
+                        "No selected Director")
+                </div>
+            </div>
+        }
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Create" class="btn" />
+        </div>
+    </fieldset>
+}

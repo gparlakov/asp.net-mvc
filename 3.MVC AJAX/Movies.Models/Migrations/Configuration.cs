@@ -37,29 +37,33 @@ namespace Movies.Models.Migrations
             var female =  new Sex { Name = "Female" };
             
             context.Sexes.AddOrUpdate(
-                s => s.Id,
+                s => s.Name,
                 male,
                 female
             );
 
+            //context.SaveChanges();
+
             context.Actors.AddOrUpdate(
-                a => a.Id,
-                new Actor {Name = "Brad Pitt", Sex = male},
-                new Actor {Name = "Angelina Jolie", Sex = female},
-                new Actor {Name = "Aston Kutcher", Sex = male},
-                new Actor {Name = "Robert de Niro", Sex = male},
-                new Actor {Name = "Jennifer Anniston", Sex = female},
-                new Actor {Name = "Joddie Foster", Sex = female},
-                new Actor {Name = "Julia Roberts", Sex = female},
-                new Actor {Name = "Sophia Loren", Sex = female},
-                new Actor {Name = "Grace Kelly", Sex = female},
-                new Actor { Name = "Nataly Portman", Sex = female},
-                new Actor { Name = "Marilyn Monroe", Sex = female},
-                new Actor { Name = "Al Pacino", Sex = male}
+                a => a.Name,
+                new Actor() { Name = "Brad Pitt", Sex = male },
+                new Actor() { Name = "Angelina Jolie", Sex = female },
+                new Actor() { Name = "Aston Kutcher", Sex = male },
+                new Actor() { Name = "Robert de Niro", Sex = male },
+                new Actor() { Name = "Jennifer Anniston", Sex = female },
+                new Actor() { Name = "Joddie Foster", Sex = female },
+                new Actor() { Name = "Julia Roberts", Sex = female },
+                new Actor() { Name = "Sophia Loren", Sex = female },
+                new Actor() { Name = "Grace Kelly", Sex = female },
+                new Actor() { Name = "Nataly Portman", Sex = female },
+                new Actor() { Name = "Marilyn Monroe", Sex = female },
+                new Actor() { Name = "Al Pacino", Sex = male }
             );
 
+            //context.SaveChanges();
+
             context.Movies.AddOrUpdate(
-                m => m.Id,
+                m => m.Title,
                 new Movie
                 {
                     Title = "Shawshank Redemption",
@@ -89,7 +93,7 @@ namespace Movies.Models.Migrations
                     Title = "The Dark Knight",
                     Year = "2008",
                     LeadingActor = new Actor { Name = "Christian Bale", Sex = male },
-                    Director = new Director { Name = "Christopher Nolan", Sex = male}
+                    Director = new Director { Name = "Christopher Nolan", Sex = male }
 
                 },
                 new Movie { Title = "12 Angry Men", Year = "1957" },
