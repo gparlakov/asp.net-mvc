@@ -19,7 +19,28 @@ namespace LibrarySystem.Controllers
         public ActionResult Index()
         {
             var booksInCategories = this.GetBooksInCategories();
-            return View();
+            return View(booksInCategories);
+        }
+
+        public ActionResult Search(string query)
+        {
+            var found = this.SearchFor(query);
+            ViewBag.Query = query;
+            return View(found);
+        }
+
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var book = this.data.Books
+                .Include("Category")
+                .FirstOrDefault(b => b.Id == id);
+
+            return View(book);
         }
 
         public ActionResult About()
@@ -54,6 +75,22 @@ namespace LibrarySystem.Controllers
                 .ToList();
 
             return booksInCategories;
+        }
+
+        private IEnumerable<BookVM> SearchFor(string text)
+        {
+            var found = this.data.Books
+                .Include("Category")
+                .Where(b => b.Title.Contains(text) || b.Author.Contains(text))
+                .Select(b => new BookVM 
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    Author = b.Author,
+                    Category = b.Category.Name
+                });
+
+            return found;
         }
 
     }

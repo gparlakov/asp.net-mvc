@@ -1,0 +1,10 @@
+﻿@helper TrimText(string text, int length = 20){
+    if (text == null || text.Length <= length)
+    {
+        @text
+    }
+    else
+    {
+        <span title="@text">@(text.Substring(0, length) + "...")</span>
+    }
+}

@@ -2,41 +2,46 @@
 @{
     ViewBag.Title = "Books";
 }
-
-<div class="page-header clearfix">
-    <div class="span3">
-        <h1>Books</h1>
-    </div>
-    <div class="search-button pull-right">
-        <div class="form-search">
-            <div class="input-append">
-                <form action="/search" method="get">
-                    <input type="text"
-                           maxlength="100"
-                           name="search-text"
-                           id="search-text"
-                           placeholder="Books serach..."
-                           class="span3 search-query" />
-                    <input type="submit"
-                           class="btn" />
-                </form>
+<div class="container-fluid">
+    <div class="page-header clearfix">
+        <div class="span3">
+            <h1>Books</h1>
+        </div>
+        <div class="search-button pull-right">
+            <div class="form-search">
+                <div class="input-append">
+                    <form action="home/search" method="post">
+                        <input type="text"
+                               maxlength="100"
+                               name="query"
+                               id="query"
+                               placeholder="Books serach..."
+                               class="span3 search-query" />
+                        <input type="submit"
+                               class="btn" />
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<ul class="container clearfix">
-    @foreach (var category in Model)
+    <ul class="contain-fluid clearfix">
+        @foreach (var category in Model)
     {
-        <li class="span3">
-            <h3>
-                @category.Name
-            </h3>
-            @foreach (var book in category.Books)
+            <li class="span4 results-div">
+                <h3>
+                    @category.Name
+                </h3>
+                @foreach (var item in category.Books)
             {
-                <div>
-                    <span>@book.Title</span> <span>by</span> <span>@book.Author</span>
-                </div>
+                    <div>
+                        <a href="home/details/@item.Id">
+                            <span>@Helpers.TrimText(item.Title.ToString())</span>
+                             by 
+                            <strong>@Helpers.TrimText(item.Author.ToString())</strong>
+                        </a>
+                    </div>
             }
-        </li>
+            </li>
     }
-</ul>
+    </ul>
+</div>

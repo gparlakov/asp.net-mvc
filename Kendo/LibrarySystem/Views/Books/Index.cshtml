@@ -1,0 +1,94 @@
+﻿@model IEnumerable<LibrarySystem.Models.Book>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@(Html.Kendo().Grid<LibrarySystem.Models.Book>()
+    .Name("books-grid")
+    .BindTo(Model)
+    .Columns(c =>
+    {
+        c.Bound(b => b.ISBN).Template(t => Helpers.TrimText(t.ISBN));
+        c.Bound(b => b.Title).Template(t => Helpers.TrimText(t.Title));
+        c.Bound(b => b.Author).Template(t => Helpers.TrimText(t.Author));
+        c.Bound(b => b.Description).Template(t => Helpers.TrimText(t.Description, 20));
+    })
+    .Sortable()
+    .Filterable()
+    .Pageable(p =>
+    {
+        p.Enabled(true);
+        p.Numeric(true);
+    })
+    .DataSource(d => 
+    {
+        d.Ajax()
+            .Read(r => r.Action("Read", "Books"))
+            .ServerOperation(true)
+            .Model(m =>
+            {
+                m.Id(mod => mod.Id);
+            });
+       
+    })
+)
+
+
+@*<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Author)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ISBN)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Url)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Category)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Helpers.TrimText(item.Title)
+        </td>
+        <td>
+            @Helpers.TrimText(item.Author)
+        </td>
+        <td>
+            @Helpers.TrimText(item.ISBN)
+        </td>
+        <td>
+            @Helpers.TrimText(item.Url)
+        </td>
+        <td>
+            @Helpers.TrimText(item.Description)
+        </td>
+        <td>
+            @Helpers.TrimText(item.Category.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>*@

@@ -1,0 +1,20 @@
+﻿@model IEnumerable<LibrarySystem.ViewModels.Books.BookVM>
+
+@{
+    var query = ViewBag.Query;
+    ViewBag.Title = "Search Results for " + query;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<ul>
+    @foreach (var item in Model)
+    {
+        <li>
+            <a href="~/home/details/@item.Id">
+                <span>@item.Title</span> by <strong>@item.Author</strong>
+            </a>
+            (Category: @item.Category)
+        </li>
+    }
+</ul>

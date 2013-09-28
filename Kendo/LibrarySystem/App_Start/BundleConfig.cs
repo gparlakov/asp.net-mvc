@@ -30,8 +30,8 @@ namespace LibrarySystem
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
                       "~/Content/bootstrap-responsive.css",
-                      "~/scripts/kendo/kendo.common.css",
-                      "~/scripts/kendo/kendo.black.css"));
+                      "~/Content/kendo/kendo.common.css",
+                      "~/Content/kendo/kendo.black.css"));
         }
     }
 }
