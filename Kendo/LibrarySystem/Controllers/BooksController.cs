@@ -67,6 +67,17 @@ namespace LibrarySystem.Controllers
             return Json(new {Error = "Invalid!"});
         }
 
+        [HttpPost]
+        public ActionResult Insert(Book book)
+        {
+            return Json(new { });
+        }
+
+        public ActionResult Delete(int id)
+        {
+            return Json(new { });
+        }
+
         protected override void Dispose(bool disposing)
         {
             db.Dispose();

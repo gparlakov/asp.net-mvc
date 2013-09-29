@@ -11,10 +11,10 @@ namespace LibrarySystem.ViewModels.Books
         [ScaffoldColumn(false)]
         public int Id { get; set; }
 
-        [AllowHtml]
+        [AllowHtml,Required,MinLength(2,ErrorMessage="Min length 10")]
         public string Title { get; set; }
 
-        [AllowHtml]
+        [AllowHtml,Required]
         public string Author { get; set; }
 
         [AllowHtml]

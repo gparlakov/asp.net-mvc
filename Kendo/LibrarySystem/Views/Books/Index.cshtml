@@ -19,15 +19,23 @@
             com.Destroy();
         });
     })
+    .ToolBar(tb => { tb.Create(); })
     .ClientDetailTemplateId("detailsTemplate")
+    .Selectable(selectable => selectable.Mode(GridSelectionMode.Multiple))
     .Sortable()
     .Filterable(f => f.Enabled(true))
     .Editable(e =>
     {
         e.Mode(GridEditMode.PopUp);
         e.TemplateName("PopupEditorBookGrid");
-        e.Window(w => w.Draggable(true).Width(500));
-    })
+        e.Window(
+            w => w.Draggable(true)
+                .Resizable(r => {
+                    r.Enabled(true);
+                })
+                .Width(800)
+            );
+    })    
     .Pageable(p =>
     {
         p.Enabled(true);
@@ -48,11 +56,13 @@
             {
                 destroy.Action("Delete", "Books");
             })
+            .Create(create => create.Action("Insert", "Books").Type(HttpVerbs.Post))
             .ServerOperation(true)
             .PageSize(5)
             .Model(m =>
             {
                 m.Id(mod => mod.Id);
+                m.Field(f => f.Category).DefaultValue(((IEnumerable<LibrarySystem.ViewModels.Categories.CategoryVM>)ViewData["Categories"]).First());
             })
             .Events(ev => 
             {
@@ -81,8 +91,8 @@
             return kendo.htmlEncode(text);
         }
 
-        return '<span title="' + kendo.htmlEncode(text) + '">' +
-            kendo.htmlEncode(text.substr(0, length)) + '...</span>';
+        var parsedText = "<span title='" + text.replace("'","`") + "'> " + kendo.htmlEncode(text.substr(0, length)) + "...</span>";
+        return parsedText;
     }
 
     function errorHandler(e) {
