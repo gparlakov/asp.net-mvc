@@ -21,7 +21,7 @@ namespace LibrarySystem.Controllers
         // GET: /Books/
         public ActionResult Index()
         {
-            //ViewData["categories"] = db.Categories.Select(c => new CategoryVM {Id = c.Id, Name = c.Name }).ToList();
+            ViewData["categories"] = db.Categories.Select(c => new CategoryVM { Id = c.Id, Name = c.Name }).ToList();
             //ViewData["defaulCategory"] = (ViewData["categories"] as IEnumerable<CategoryVM>).First();
             return View();
         }

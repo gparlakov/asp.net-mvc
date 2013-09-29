@@ -5,27 +5,27 @@
 <h2>Index</h2>
 
 @(Html.Kendo().Grid<LibrarySystem.ViewModels.Books.BookGridVM>()
-    .Name("books-grid")    
+    .Name("books-grid")
     .Columns(c =>
     {
-        c.Bound(b => b.ISBN).Template(b => { }).ClientTemplate("#= trimText(ISBN) #");
+        c.Bound(b => b.ISBN).ClientTemplate("#= trimText(ISBN) #");
         c.Bound(b => b.Title).Template(b => { }).ClientTemplate("#= trimText(Title) #");
         c.Bound(b => b.Author).Template(b => { }).ClientTemplate("#= trimText(Author) #");
         c.Bound(b => b.Description).Template(b => { }).ClientTemplate("#= trimText(Description, 35) #");
-        c.Bound(b => b.Category).Template(b => { }).ClientTemplate("#= trimText(Category.Name, 20) #");
+        c.Bound(b => b.Category).ClientTemplate("#= trimText(Category.Name, 20) #");
         c.Command(com =>
         {
             com.Edit();
             com.Destroy();
+            com.Select();
         });
     })
     .Sortable()
     .Filterable(f => f.Enabled(true))
     .Editable(e =>
     {
-        e.Mode(GridEditMode.PopUp);
-        e.TemplateName("Category");
-        e.Enabled(true);
+        e.Mode(GridEditMode.InCell);
+        e.TemplateName("PopupEditorBookGrid");
     })
     .Pageable(p =>
     {
@@ -52,8 +52,6 @@
             .Model(m =>
             {
                 m.Id(mod => mod.Id);
-                m.Field(f => f.Id).Editable(false);
-                m.Field(f => f.Category); @*.DefaultValue(ViewData["defaulCategory"] as LibrarySystem.ViewModels.Categories.CategoryVM).Editable(true);*@
             })
             .Events(ev => 
             {
@@ -79,30 +77,7 @@
             kendo.htmlEncode(text.substr(0, length)) + '...</span>';
     }
 
-    function categoryDropDownEditor(container, options) {
-        $('<input required data-text-field="CategoryName" data-value-field="CategoryID" data-bind="value:' + options.field + '"/>')
-            .appendTo(container)
-            .kendoDropDownList({
-                autoBind: false,
-                dataSource: {
-                    type: "odata",
-                    transport: {
-                        read: "/Books/CategoriesRead"
-                    }
-                }
-            });
-    }
-
     function errorHandler(e) {
         debugger;
     }
-</script>
-<script type="text/kendo-tmpl" id="editorTemplate">
-
-    <select name="Category">
-        <option value="1">Drip</option>
-        <option value="2">Drop</option>
-        <option value="3">Drop</option>
-    </select>
-
 </script>

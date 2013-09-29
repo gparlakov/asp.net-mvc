@@ -6,16 +6,15 @@ using System.Linq.Expressions;
 using System.Web.Mvc;
 namespace LibrarySystem.ViewModels.Books
 {
-    
     public class BookGridVM
     {
         [ScaffoldColumn(false)]
         public int Id { get; set; }
 
-        [AllowHtml]
+
         public string Title { get; set; }
 
-        [AllowHtml]
+
         public string Author { get; set; }
 
         [AllowHtml]

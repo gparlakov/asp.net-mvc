@@ -1,7 +1,8 @@
 @model LibrarySystem.ViewModels.Categories.CategoryVM
 
-@(Html.DropDownList("Categories", 
-new List<SelectListItem>() 
-{ 
-    new SelectListItem{Value = "1", Selected=false, Text="ValueExtensions" }
-},"Option label"))
+@(Html.Kendo().DropDownListFor(model => model.Category)
+    .Name("EditorForName")
+    .DataTextField("Name")
+    .DataValueField("Id")
+    .BindTo((System.Collections.IEnumerable)ViewData["categories"])
+)
