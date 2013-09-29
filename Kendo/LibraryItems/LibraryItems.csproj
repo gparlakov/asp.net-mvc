@@ -45,6 +45,7 @@
     <Content Include="KendoScripts\jquery.min.js" />
     <Content Include="KendoScripts\kendo.all.js" />
     <Content Include="KendoScripts\kendo.all.min.js" />
+    <Content Include="KendoScripts\kendo.aspnetmvc.js" />
     <Content Include="KendoScripts\kendo.aspnetmvc.min.js" />
     <Content Include="KendoScripts\kendo.autocomplete.js" />
     <Content Include="KendoStyles\Black\editor.png" />
@@ -65,11 +66,15 @@
     <None Include="KendoHelpers\Currency.cshtml" />
     <None Include="KendoHelpers\Date.cshtml" />
     <None Include="KendoHelpers\DateTime.cshtml" />
+    <None Include="KendoHelpers\Email.cshtml" />
+    <None Include="KendoHelpers\EmailAddress.cshtml" />
     <None Include="KendoHelpers\GridForeignKey.cshtml" />
     <None Include="KendoHelpers\Integer.cshtml" />
     <None Include="KendoHelpers\Number.cshtml" />
+    <None Include="KendoHelpers\Password.cshtml" />
     <None Include="KendoHelpers\String.cshtml" />
     <None Include="KendoHelpers\Time.cshtml" />
+    <None Include="KendoHelpers\Url.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

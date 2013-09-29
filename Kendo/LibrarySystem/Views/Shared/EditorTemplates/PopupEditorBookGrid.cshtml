@@ -1,13 +1,10 @@
 @model LibrarySystem.ViewModels.Books.BookGridVM
 
 @Html.LabelFor(model => model.Title)
-
 @Html.EditorFor(model => model.Title)
+
 @Html.LabelFor(model => model.Author)
 @Html.EditorFor(model => model.Author)
-
-@Html.EditorFor(model => model.ISBN)
-@Html.LabelFor(model => model.ISBN)
 
 @Html.LabelFor(model => model.ISBN)
 @Html.EditorFor(model => model.ISBN)
@@ -16,11 +13,13 @@
 @Html.EditorFor(model => model.Url)
 
 @Html.LabelFor(model => model.Description)
-@Html.Kendo().EditorFor(model => model.Description)
+@Html.EditorFor(model => model.Description)
+
 
 @(Html.LabelFor(model => model.Category))
 @(Html.Kendo().DropDownListFor(model => model.Category)
 .DataTextField("Name")
 .DataValueField("Id")
-.BindTo((System.Collections.IEnumerable)ViewData["categories"])
-)
+.BindTo((System.Collections.IEnumerable)ViewData["categories"]))
+
+<div id="error-message"></div>

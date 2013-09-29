@@ -17,15 +17,16 @@
         {
             com.Edit();
             com.Destroy();
-            com.Select();
         });
     })
+    .ClientDetailTemplateId("detailsTemplate")
     .Sortable()
     .Filterable(f => f.Enabled(true))
     .Editable(e =>
     {
-        e.Mode(GridEditMode.InCell);
+        e.Mode(GridEditMode.PopUp);
         e.TemplateName("PopupEditorBookGrid");
+        e.Window(w => w.Draggable(true).Width(500));
     })
     .Pageable(p =>
     {
@@ -60,6 +61,13 @@
     })
 )
 
+<script id="detailsTemplate" type="text/x-kendo-template">
+    <h5>#: Title #</h5>
+    <h6>by #: Author#</h6>
+    <p><a href="#: Url #">#: Url #</a></p>
+    <p>#: ISBN #</p>
+    <p>#: Description #</p>
+</script>
 
 <script>
     function trimText(text, length){
@@ -78,6 +86,6 @@
     }
 
     function errorHandler(e) {
-        debugger;
+        $("#error-message").text(e.xhr.responseText);
     }
 </script>
