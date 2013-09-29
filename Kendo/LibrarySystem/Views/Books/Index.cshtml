@@ -1,94 +1,108 @@
-﻿@model IEnumerable<LibrarySystem.Models.Book>
-
-@{
+﻿@{
     ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
 
-@(Html.Kendo().Grid<LibrarySystem.Models.Book>()
-    .Name("books-grid")
-    .BindTo(Model)
+@(Html.Kendo().Grid<LibrarySystem.ViewModels.Books.BookGridVM>()
+    .Name("books-grid")    
     .Columns(c =>
     {
-        c.Bound(b => b.ISBN).Template(t => Helpers.TrimText(t.ISBN));
-        c.Bound(b => b.Title).Template(t => Helpers.TrimText(t.Title));
-        c.Bound(b => b.Author).Template(t => Helpers.TrimText(t.Author));
-        c.Bound(b => b.Description).Template(t => Helpers.TrimText(t.Description, 20));
+        c.Bound(b => b.ISBN).Template(b => { }).ClientTemplate("#= trimText(ISBN) #");
+        c.Bound(b => b.Title).Template(b => { }).ClientTemplate("#= trimText(Title) #");
+        c.Bound(b => b.Author).Template(b => { }).ClientTemplate("#= trimText(Author) #");
+        c.Bound(b => b.Description).Template(b => { }).ClientTemplate("#= trimText(Description, 35) #");
+        c.Bound(b => b.Category).Template(b => { }).ClientTemplate("#= trimText(Category.Name, 20) #");
+        c.Command(com =>
+        {
+            com.Edit();
+            com.Destroy();
+        });
     })
     .Sortable()
-    .Filterable()
+    .Filterable(f => f.Enabled(true))
+    .Editable(e =>
+    {
+        e.Mode(GridEditMode.PopUp);
+        e.TemplateName("Category");
+        e.Enabled(true);
+    })
     .Pageable(p =>
     {
         p.Enabled(true);
         p.Numeric(true);
     })
-    .DataSource(d => 
+    .DataSource(d =>
     {
         d.Ajax()
-            .Read(r => r.Action("Read", "Books"))
+            .Read(r =>
+            {
+                r.Action("Read", "Books");
+            })
+            .Update(u =>
+            {
+                u.Action("Update", "Books");
+            })
+            .Destroy(destroy =>
+            {
+                destroy.Action("Delete", "Books");
+            })
             .ServerOperation(true)
+            .PageSize(5)
             .Model(m =>
             {
                 m.Id(mod => mod.Id);
+                m.Field(f => f.Id).Editable(false);
+                m.Field(f => f.Category); @*.DefaultValue(ViewData["defaulCategory"] as LibrarySystem.ViewModels.Categories.CategoryVM).Editable(true);*@
+            })
+            .Events(ev => 
+            {
+                ev.Error("errorHandler");
             });
-       
     })
 )
 
 
-@*<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Author)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ISBN)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Url)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Category)
-        </th>
-        <th></th>
-    </tr>
+<script>
+    function trimText(text, length){
+        length = length || 20;
+        if (!text) {
+            return text;
+        }
+        text = $.trim(text);
+        if (text.length <= length)
+        {
+            return kendo.htmlEncode(text);
+        }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Helpers.TrimText(item.Title)
-        </td>
-        <td>
-            @Helpers.TrimText(item.Author)
-        </td>
-        <td>
-            @Helpers.TrimText(item.ISBN)
-        </td>
-        <td>
-            @Helpers.TrimText(item.Url)
-        </td>
-        <td>
-            @Helpers.TrimText(item.Description)
-        </td>
-        <td>
-            @Helpers.TrimText(item.Category.Name)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+        return '<span title="' + kendo.htmlEncode(text) + '">' +
+            kendo.htmlEncode(text.substr(0, length)) + '...</span>';
+    }
 
-</table>*@
+    function categoryDropDownEditor(container, options) {
+        $('<input required data-text-field="CategoryName" data-value-field="CategoryID" data-bind="value:' + options.field + '"/>')
+            .appendTo(container)
+            .kendoDropDownList({
+                autoBind: false,
+                dataSource: {
+                    type: "odata",
+                    transport: {
+                        read: "/Books/CategoriesRead"
+                    }
+                }
+            });
+    }
+
+    function errorHandler(e) {
+        debugger;
+    }
+</script>
+<script type="text/kendo-tmpl" id="editorTemplate">
+
+    <select name="Category">
+        <option value="1">Drip</option>
+        <option value="2">Drop</option>
+        <option value="3">Drop</option>
+    </select>
+
+</script>

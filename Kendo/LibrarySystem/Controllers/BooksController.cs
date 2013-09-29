@@ -7,6 +7,10 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LibrarySystem.Models;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
+using LibrarySystem.ViewModels.Books;
+using LibrarySystem.ViewModels.Categories;
 
 namespace LibrarySystem.Controllers
 {
@@ -17,112 +21,51 @@ namespace LibrarySystem.Controllers
         // GET: /Books/
         public ActionResult Index()
         {
-            var books = db.Books.Include(b => b.Category);
-            return View(books.ToList());
+            //ViewData["categories"] = db.Categories.Select(c => new CategoryVM {Id = c.Id, Name = c.Name }).ToList();
+            //ViewData["defaulCategory"] = (ViewData["categories"] as IEnumerable<CategoryVM>).First();
+            return View();
         }
 
-        //// GET: /Books/Details/5
-        //public ActionResult Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Book book = db.Books.Find(id);
-        //    if (book == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(book);
-        //}
+        [HttpPost]
+        public ActionResult CategoriesRead([DataSourceRequest]DataSourceRequest request)
+        {
+            var categories = db.Categories.Select(c => new CategoryVM { Id = c.Id, Name = c.Name }).ToList();
 
-        //// GET: /Books/Create
-        //public ActionResult Create()
-        //{
-        //    ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name");
-        //    return View();
-        //}
+            return Json(categories.ToDataSourceResult(request));
+        }
 
-        //// POST: /Books/Create
-        //// To protect from over posting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //// 
-        //// Example: public ActionResult Update([Bind(Include="ExampleProperty1,ExampleProperty2")] Model model)
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create(Book book)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Books.Add(book);
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
+        public ActionResult Read([DataSourceRequest]DataSourceRequest request)
+        {
+            var books = db.Books
+                .Include(b => b.Category)
+                .Select(BookGridVM.FromBook);
 
-        //    ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", book.CategoryId);
-        //    return View(book);
-        //}
+            return Json(books.ToDataSourceResult(request));
+        }
 
-        //// GET: /Books/Edit/5
-        //public ActionResult Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Book book = db.Books.Find(id);
-        //    if (book == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", book.CategoryId);
-        //    return View(book);
-        //}
+        [HttpPost]
+        public ActionResult Update(Book book)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    book.CategoryId = book.Category.Id;
+                    book.Category = db.Categories.Find(book.Category.Id);
+                    db.Entry<Book>(book).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return Json(new { });
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("ff", ex);
 
-        //// POST: /Books/Edit/5
-        //// To protect from over posting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //// 
-        //// Example: public ActionResult Update([Bind(Include="ExampleProperty1,ExampleProperty2")] Model model)
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(Book book)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(book).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", book.CategoryId);
-        //    return View(book);
-        //}
+                    return Json(new {Error = ex.Message});
+                }
+            }
 
-        //// GET: /Books/Delete/5
-        //public ActionResult Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Book book = db.Books.Find(id);
-        //    if (book == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(book);
-        //}
-
-        //// POST: /Books/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    Book book = db.Books.Find(id);
-        //    db.Books.Remove(book);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
+            return Json(new {Error = "Invalid!"});
+        }
 
         protected override void Dispose(bool disposing)
         {

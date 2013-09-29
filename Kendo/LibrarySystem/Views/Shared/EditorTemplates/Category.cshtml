@@ -1,0 +1,7 @@
+@model LibrarySystem.ViewModels.Categories.CategoryVM
+
+@(Html.DropDownList("Categories", 
+new List<SelectListItem>() 
+{ 
+    new SelectListItem{Value = "1", Selected=false, Text="ValueExtensions" }
+},"Option label"))
