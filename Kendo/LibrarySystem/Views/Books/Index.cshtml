@@ -1,8 +1,8 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Books";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
 @(Html.Kendo().Grid<LibrarySystem.ViewModels.Books.BookGridVM>()
     .Name("books-grid")
@@ -79,23 +79,4 @@
     <p>#: Description #</p>
 </script>
 
-<script>
-    function trimText(text, length){
-        length = length || 20;
-        if (!text) {
-            return text;
-        }
-        text = $.trim(text);
-        if (text.length <= length)
-        {
-            return kendo.htmlEncode(text);
-        }
-
-        var parsedText = "<span title='" + text.replace("'","`") + "'> " + kendo.htmlEncode(text.substr(0, length)) + "...</span>";
-        return parsedText;
-    }
-
-    function errorHandler(e) {
-        $("#error-message").text(e.xhr.responseText);
-    }
-</script>
+@Scripts.Render("~/Scripts/utils.js")

@@ -8,25 +8,21 @@ namespace LibrarySystem.ViewModels.Books
 {
     public class BookGridVM
     {
-        [ScaffoldColumn(false)]
         public int Id { get; set; }
 
-        [AllowHtml,Required,MinLength(2,ErrorMessage="Min length 10")]
+        [Required,StringLength(100, ErrorMessage="Title length must be 2 to 100.", MinimumLength = 2)]
         public string Title { get; set; }
 
-        [AllowHtml,Required]
+        [Required]
         public string Author { get; set; }
 
-        [AllowHtml]
+        [StringLength(17)]
         public string ISBN { get; set; }
 
-        [AllowHtml]
         public string Url { get; set; }
 
-        [AllowHtml]
         public string Description { get; set; }
 
-        [AllowHtml]
         public CategoryVM Category { get; set; }
 
         public static Expression<Func<Book, BookGridVM>> FromBook

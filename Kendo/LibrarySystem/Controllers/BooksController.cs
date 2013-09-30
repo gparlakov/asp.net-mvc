@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -22,16 +23,7 @@ namespace LibrarySystem.Controllers
         public ActionResult Index()
         {
             ViewData["categories"] = db.Categories.Select(c => new CategoryVM { Id = c.Id, Name = c.Name }).ToList();
-            //ViewData["defaulCategory"] = (ViewData["categories"] as IEnumerable<CategoryVM>).First();
             return View();
-        }
-
-        [HttpPost]
-        public ActionResult CategoriesRead([DataSourceRequest]DataSourceRequest request)
-        {
-            var categories = db.Categories.Select(c => new CategoryVM { Id = c.Id, Name = c.Name }).ToList();
-
-            return Json(categories.ToDataSourceResult(request));
         }
 
         public ActionResult Read([DataSourceRequest]DataSourceRequest request)
@@ -43,10 +35,11 @@ namespace LibrarySystem.Controllers
             return Json(books.ToDataSourceResult(request));
         }
 
-        [HttpPost]
-        public ActionResult Update(Book book)
+        [HttpPost, ValidateInput(false)]
+        public ActionResult Update(Book book,
+            [DataSourceRequest]DataSourceRequest request)
         {
-            if (ModelState.IsValid)
+            if (book != null && ModelState.IsValid)
             {
                 try
                 {
@@ -58,24 +51,76 @@ namespace LibrarySystem.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("ff", ex);
-
-                    return Json(new {Error = ex.Message});
+                    var validationError = ex as DbEntityValidationException;
+                    if (validationError != null)
+                    {
+                        foreach (var item in validationError.EntityValidationErrors.First().ValidationErrors)
+                        {
+                            ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                        }
+                    }
                 }
             }
 
-            return Json(new {Error = "Invalid!"});
+            return Json((new[] { book }).ToDataSourceResult(request, ModelState));
         }
 
-        [HttpPost]
-        public ActionResult Insert(Book book)
+        [HttpPost, ValidateInput(false)]
+        public ActionResult Insert(Book book, [DataSourceRequest]DataSourceRequest request)
         {
-            return Json(new { });
+            if (book!= null && ModelState.IsValid)
+            {
+                try
+                {
+                    book.CategoryId = book.Category.Id;
+                    book.Category = db.Categories.Find(book.CategoryId);
+                    this.db.Books.Add(book);
+                    db.SaveChanges();
+                    return Json(new { });
+                }
+                catch (Exception ex)
+                {
+                    var validationError = ex as DbEntityValidationException;
+                    if (validationError != null)
+	                {
+                        foreach (var item in validationError.EntityValidationErrors.First().ValidationErrors)
+                        {
+                            ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                        }
+	                }
+
+                    return Json(ModelState.ToDataSourceResult());
+                }
+            }
+            
+            return Json((new[] {""}).ToDataSourceResult(request, ModelState));
         }
 
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id, [DataSourceRequest]DataSourceRequest request)
         {
-            return Json(new { });
+            if (id == null)
+            {
+                return new EmptyResult();
+            }
+            var bookToDelete = this.db.Books.Find(id);
+            try
+            {
+                this.db.Books.Remove(bookToDelete);
+                this.db.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                var validationError = ex;
+                if (validationError != null)
+                {
+                    foreach (var item in validationError.EntityValidationErrors.First().ValidationErrors)
+                    {
+                        ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                    }
+                }
+            }
+
+            return Json(new[] { "" }.ToDataSourceResult(request, ModelState));
         }
 
         protected override void Dispose(bool disposing)

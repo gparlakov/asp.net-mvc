@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="LibrarySystemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="LibrarySystemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Books">
           <Key>
             <PropertyRef Name="Id" />
@@ -15,7 +15,7 @@
           <Property Name="ISBN" Type="nchar" MaxLength="17" />
           <Property Name="Url" Type="nvarchar" MaxLength="256" />
           <Property Name="CategoryId" Type="int" Nullable="false" />
-          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Categories">
           <Key>
@@ -44,8 +44,7 @@
             <End Role="Books" EntitySet="Books" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LibrarySystemModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -59,7 +58,7 @@
           <Property Name="ISBN" Type="String" MaxLength="17" FixedLength="true" Unicode="true" />
           <Property Name="Url" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="CategoryId" Type="Int32" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="true" />
           <NavigationProperty Name="Category" Relationship="Self.FK_Books_Categories" FromRole="Books" ToRole="Categories" />
         </EntityType>
         <EntityType Name="Category">
