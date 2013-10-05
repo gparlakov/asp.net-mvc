@@ -1,0 +1,8 @@
+@model LibrarySystem.ViewModels.Categories.CategoryVM
+
+@(Html.Kendo().DropDownListFor(model => model.Category)
+    .Name("EditorForName")
+    .DataTextField("Name")
+    .DataValueField("Id")
+    .BindTo((System.Collections.IEnumerable)ViewData["categories"])
+)

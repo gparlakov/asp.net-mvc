@@ -6,9 +6,17 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
 
 </head>
 <body>
+
+    <div class="container">
+
+    </div>
+
+
+
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
@@ -17,13 +25,18 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Books", "Index", "Home", null, new { @class = "brand" })
                 <div class="nav-collapse collapse">
-                    <ul class="nav">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("Books", "Books", "Home")</li>
-                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    </ul>
+                    <div class="span6">
+                        @(Html.Kendo().Menu()
+                            .Name("main-nav-menu")
+                            .Items(i =>
+                            {
+                                i.Add().Action("Index", "Home").Text("Library System");
+                                i.Add().Action("Index", "Books").Text("Books");
+                                i.Add().Action("Index", "Categories").Text("Categories");
+                            })
+                        )
+                    </div>
                     @Html.Partial("_LoginPartial")
                 </div>
             </div>
@@ -33,12 +46,14 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Library system</p>
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
+
+
+
 </html>

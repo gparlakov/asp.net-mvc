@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LibrarySystem.Models;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
+using LibrarySystem.ViewModels.Books;
+using LibrarySystem.ViewModels.Categories;
 
 namespace LibrarySystem.Controllers
 {
@@ -17,112 +22,106 @@ namespace LibrarySystem.Controllers
         // GET: /Books/
         public ActionResult Index()
         {
-            var books = db.Books.Include(b => b.Category);
-            return View(books.ToList());
+            ViewData["categories"] = db.Categories.Select(c => new CategoryVM { Id = c.Id, Name = c.Name }).ToList();
+            return View();
         }
 
-        //// GET: /Books/Details/5
-        //public ActionResult Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Book book = db.Books.Find(id);
-        //    if (book == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(book);
-        //}
+        public ActionResult Read([DataSourceRequest]DataSourceRequest request)
+        {
+            var books = db.Books
+                .Include(b => b.Category)
+                .Select(BookGridVM.FromBook);
 
-        //// GET: /Books/Create
-        //public ActionResult Create()
-        //{
-        //    ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name");
-        //    return View();
-        //}
+            return Json(books.ToDataSourceResult(request));
+        }
 
-        //// POST: /Books/Create
-        //// To protect from over posting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //// 
-        //// Example: public ActionResult Update([Bind(Include="ExampleProperty1,ExampleProperty2")] Model model)
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create(Book book)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Books.Add(book);
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
+        [HttpPost, ValidateInput(false)]
+        public ActionResult Update(Book book,
+            [DataSourceRequest]DataSourceRequest request)
+        {
+            if (book != null && ModelState.IsValid)
+            {
+                try
+                {
+                    book.CategoryId = book.Category.Id;
+                    book.Category = db.Categories.Find(book.Category.Id);
+                    db.Entry<Book>(book).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return Json(new { });
+                }
+                catch (Exception ex)
+                {
+                    var validationError = ex as DbEntityValidationException;
+                    if (validationError != null)
+                    {
+                        foreach (var item in validationError.EntityValidationErrors.First().ValidationErrors)
+                        {
+                            ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                        }
+                    }
+                }
+            }
 
-        //    ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", book.CategoryId);
-        //    return View(book);
-        //}
+            return Json((new[] { book }).ToDataSourceResult(request, ModelState));
+        }
 
-        //// GET: /Books/Edit/5
-        //public ActionResult Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Book book = db.Books.Find(id);
-        //    if (book == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", book.CategoryId);
-        //    return View(book);
-        //}
+        [HttpPost, ValidateInput(false)]
+        public ActionResult Insert(Book book, [DataSourceRequest]DataSourceRequest request)
+        {
+            if (book!= null && ModelState.IsValid)
+            {
+                try
+                {
+                    book.CategoryId = book.Category.Id;
+                    book.Category = db.Categories.Find(book.CategoryId);
+                    this.db.Books.Add(book);
+                    db.SaveChanges();
+                    return Json(new { });
+                }
+                catch (Exception ex)
+                {
+                    var validationError = ex as DbEntityValidationException;
+                    if (validationError != null)
+	                {
+                        foreach (var item in validationError.EntityValidationErrors.First().ValidationErrors)
+                        {
+                            ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                        }
+	                }
 
-        //// POST: /Books/Edit/5
-        //// To protect from over posting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //// 
-        //// Example: public ActionResult Update([Bind(Include="ExampleProperty1,ExampleProperty2")] Model model)
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(Book book)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(book).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", book.CategoryId);
-        //    return View(book);
-        //}
+                    return Json(ModelState.ToDataSourceResult());
+                }
+            }
+            
+            return Json((new[] {""}).ToDataSourceResult(request, ModelState));
+        }
 
-        //// GET: /Books/Delete/5
-        //public ActionResult Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Book book = db.Books.Find(id);
-        //    if (book == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(book);
-        //}
+        public ActionResult Delete(int? id, [DataSourceRequest]DataSourceRequest request)
+        {
+            if (id == null)
+            {
+                return new EmptyResult();
+            }
+            var bookToDelete = this.db.Books.Find(id);
+            try
+            {
+                this.db.Books.Remove(bookToDelete);
+                this.db.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                var validationError = ex;
+                if (validationError != null)
+                {
+                    foreach (var item in validationError.EntityValidationErrors.First().ValidationErrors)
+                    {
+                        ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                    }
+                }
+            }
 
-        //// POST: /Books/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    Book book = db.Books.Find(id);
-        //    db.Books.Remove(book);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
+            return Json(new[] { "" }.ToDataSourceResult(request, ModelState));
+        }
 
         protected override void Dispose(bool disposing)
         {
