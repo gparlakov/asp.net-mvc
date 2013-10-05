@@ -13,22 +13,16 @@ namespace Teleritter.Controllers
     [ValidateInput(false)]    
     public class HomeController : BaseController
     {
-        private IQueryable<TelereetViewModel> AllTelereets()
+        private IQueryable<Telereet> AllTelereets()
         {
             return this.data.Telreets.All()
-                .OrderByDescending(t => t.PostedOn)
-                .Select(t => new TelereetViewModel
-                {
-                    Author = t.Author.UserName,
-                    Text = t.Text,
-                    Tags = t.Tags.AsQueryable().Select(TagViewModel.FromTag),
-                    PostedOn = t.PostedOn
-                });
+                .OrderByDescending(t => t.PostedOn);
+                
         }
 
         public ActionResult Index()
         {
-            var telereets = this.AllTelereets().Take(6);
+            var telereets = this.AllTelereets().Take(6).Select(TelereetViewModel.FromTelereet);
             ViewBag.Message = "Last 6 telereets";
             return View(telereets);
         }
@@ -40,18 +34,27 @@ namespace Teleritter.Controllers
                 return Redirect("Index");
             }
 
+            CacheSearch(text);
+
+            ViewBag.Message = this.HttpContext.Cache[text + "message"].ToString();
+            return View("Index", this.HttpContext.Cache[text]);
+        }
+  
+        private void CacheSearch(string text)
+        {
             if (this.HttpContext.Cache[text] == null)
             {
                 var found = this.AllTelereets();
                 found = found
-                    .Where(t => t.Tags.Any(tag => tag.Name.Contains(text)));
+                             .Where(t => t.Tags.Any(tag => tag.Name.Contains(text)));
 
-                this.HttpContext.Cache.Add(text, found, null, DateTime.Now.AddMinutes(15), TimeSpan.Zero, System.Web.Caching.CacheItemPriority.Normal, null);
+                var viewModel = found.Select(TelereetViewModel.FromTelereet);
+
+                var message = "Show by tag.|" + text + "| Cached at " + DateTime.Now;
+
+                this.HttpContext.Cache.Add(text, viewModel, null, DateTime.Now.AddMinutes(15), TimeSpan.Zero, System.Web.Caching.CacheItemPriority.Normal, null);
                 this.HttpContext.Cache.Add(text + "message", "Cashed at " + DateTime.Now, null, DateTime.Now.AddMinutes(15), TimeSpan.Zero, System.Web.Caching.CacheItemPriority.Normal, null); 
             }
-
-            ViewBag.Message = "Telereets tagged #" + text + " " + this.HttpContext.Cache[text + "message"].ToString();
-            return View("Index", this.HttpContext.Cache[text]);
         }
 
         public ActionResult PostNewTelereet(NewTelereetViewModel model)
@@ -86,8 +89,37 @@ namespace Teleritter.Controllers
             catch
             {
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Database connection lost");
-            }
+            }        
         }
+
+        public ActionResult UserHomePage()
+        {
+            var userId = User.Identity.GetUserId();
+            if (userId == null)
+	        {
+		        throw new Exception("You are not allowed in here.");
+	        }
+            var usersTlereets = this.AllTelereets().Where(t => t.Author.Id == userId).Select(TelereetViewModel.FromTelereet);
+
+            return View(usersTlereets);
+        }
+
+        public ActionResult ByTag(int? tagId)
+        {
+            if (tagId == null)
+            {
+                throw new Exception("Search by tag must contai tag to search by!");
+            }
+
+            var tagName = this.data.Tags.All().First(tag => tag.Id == tagId).Name;
+
+            CacheSearch(tagName);
+
+            ViewBag.Message = this.HttpContext.Cache[tagName + "message"];
+
+            return View("Index", this.HttpContext.Cache[tagName]);
+        }
+
   
         private TelereetViewModel CreateTelereetViewModel(Telereet newPost)
         {
@@ -115,6 +147,11 @@ namespace Teleritter.Controllers
 
         private IEnumerable<Tag> GetTags(string tagsString)
         {
+            if (tagsString == null)
+            {
+                return new List<Tag>();
+            }
+
             var tags = tagsString
                 .Trim()
                 .Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries)

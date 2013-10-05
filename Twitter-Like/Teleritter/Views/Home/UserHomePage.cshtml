@@ -1,0 +1,10 @@
+﻿@model IEnumerable<Teleritter.Models.TelereetViewModel>
+
+@{
+    ViewBag.Title = User.Identity.Name + "home page";        
+}
+
+@foreach (var telereet in Model)
+{
+    @Html.Partial("_TelereetPartial", telereet)
+}

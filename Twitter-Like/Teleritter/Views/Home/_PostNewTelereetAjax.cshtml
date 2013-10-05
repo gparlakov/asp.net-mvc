@@ -16,7 +16,7 @@
                 @Html.AntiForgeryToken()
 
                 @Html.LabelFor(m => m.Text)
-                @Html.TextAreaFor(m => m.Text, new { rows = 10, cols = 40 })
+                @Html.TextAreaFor(m => m.Text, new { rows = 5})
                 @Html.ValidationMessageFor(m => m.Text)
 
                 <div>
@@ -24,11 +24,12 @@
                     @Html.EditorFor(m => m.Tags, new { id = "tags", name = "tags" })
                 </div>
 
-                <input type="submit" value="Post" />
+                <input type="submit" value="Post" class="btn btn-primary"/>
                 <span class="text-error" id="error-from-new-telereet"/>
             }
-            <input type="text" placeholder="add new tag" onchange="addTag()" id="newTagName" />
+           
         </fieldset>
+        <input type="text" placeholder="add new tag" onchange="addTag()" id="newTagName" />
     </div>
 </div>
 
@@ -39,13 +40,10 @@
     //    $("#newTelereetForm").on("change", "#newTagName", addTag);
     //})
 
-    function addPost(data, response) {        
-        debugger;
-    }
 
     function addTag(e) {
         var newTagElem = $("#newTagName");
-        var newTag = newTag.val();
+        var newTag = newTagElem.val();
         newTagElem.val("").attr("placeholder","Added! Remove manually.");
 
         var tags = $("#Tags");

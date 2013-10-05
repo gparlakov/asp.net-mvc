@@ -22,7 +22,8 @@ namespace Teleritter.Models
                 {
                     Tags = t.Tags.AsQueryable().Select(TagViewModel.FromTag),
                     Text = t.Text,
-                    Author = t.Author.UserName
+                    Author = t.Author.UserName,
+                    PostedOn = t.PostedOn
                 };
             }
         }

@@ -9,7 +9,7 @@
         <sub>
             @foreach (var tag in Model.Tags)
             {
-                <a href="@Url.Action("ByTag", "Telereets", new { tagId = tag.TagId })">
+                <a href="@Url.Action("ByTag", "Home", new { tagId = tag.TagId })">
                     #@tag.Name
                 </a>
             }

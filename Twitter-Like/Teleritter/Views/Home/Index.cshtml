@@ -6,23 +6,39 @@
 <h1>@ViewBag.Title.</h1>
 
 <h2>@ViewBag.Message</h2>
+<div class="row-fluid">
+    <div class="span8">
+        <form action="/Home/Search" method="post">
+            <input type="search" maxlength="100" name="text" placeholder="Search by tag name" />
+            <input type="submit" class="btn btn-mini btn-info" value="search" />
+        </form>
 
-<form action="/Home/Search" method="post">    
-    <input type="search" maxlength="100" name="text" placeholder="Search by tag name" />
-    <input type="submit" class="btn btn-mini btn-info" value="search"/>
-</form>
-
-@foreach (var item in Model)
-{
-    <div class="row-fluid">
-        <div class="span6">
-            @Html.Partial("_TelereetPartial", item)
+        <div id="telereets">
+            @foreach (var item in Model)
+            {
+                <div class="telereet">
+                    @Html.Partial("_TelereetPartial", item)
+                </div>
+            }
         </div>
     </div>
-}
+    <div class="span4">
+        @if (User.Identity.IsAuthenticated)
+        {
+                @Html.Partial("_PostNewTelereetAjax", new Teleritter.Models.NewTelereetViewModel())
+        }
+    </div>
+</div>
 
-@if (User.Identity.IsAuthenticated)
-{
-    @Html.Partial("_PostNewTelereetAjax", new Teleritter.Models.NewTelereetViewModel())
-}
-
+<script>
+    function addPost(data, response) {
+        var telereets = $("#telereets");
+        var newTelereet = $("<div class='telereet'>" + data + "</div>").hide();
+        telereets.prepend(newTelereet);
+        newTelereet.fadeToggle(1000);
+        var last = telereets.find(".telereet").last().slideToggle(1000);
+        setTimeout(function () {
+            last.remove();
+        }, 2001);
+    }
+</script>
