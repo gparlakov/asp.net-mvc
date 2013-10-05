@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Teleritter.Models.TagViewModel>
+
+@foreach (var item in Model)
+{
+    if (item != Model.Last())
+    {
+        @: @item.Name,
+    }
+    else
+    {
+       @:@item.Name
+    }
+}

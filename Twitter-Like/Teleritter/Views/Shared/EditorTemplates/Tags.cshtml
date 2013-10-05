@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Teleritter.Models.TagViewModel>
+<ul class="unstyled inline" id="Tags">
+    @foreach (var item in Model)
+    {
+        <li class="well-small">
+            @item.Name
+            <sup class="well">
+                @(Ajax.ActionLink(
+                    "x",
+                    "RemoveTagFromTelereet",
+                    "Admin",
+                    new { tagId = item.TagId, telereetId = 0},
+                    new AjaxOptions
+                    {
+                        OnBegin = "takeTelereetId"
+                    },
+                    new { @class= "btn btn-mini btn-danger" }
+                ))
+            </sup>
+        </li>
+    }
+</ul>
+
+<select id="AllTags">
+    <option>Tags</option>
+</select>
+
+<button class="btn btn-mini" form="" onclick="addTag()">+</button>
+
+<script>
+    $(function () {
+        $.getJSON("/Admin/GetAllTags")
+        .done(function (data) {
+            var items = [];
+            $.each(data, function (key, tag) {
+                items.push("<option value='" + tag.Name + "'>" + tag.Name + "</option>");
+            });
+
+            $("#AllTags").append(items.join(""))
+        })
+        .fail(function (error) {
+            $("#AllTags").children().first().text("No users were foun in DB")
+        });
+    })
+
+    function addTag(){
+        var alltagsSelected = $("#AllTags");
+        $("#Tags").append("<li class='well'>" + alltagsSelected.val() + "<sup><button onclick='removeFromList()' form='' class='btn btn-mini btn-danger'>x</button></sup></li>")
+    }
+
+    function removeFromList(e) {
+        var that = $(this);
+        debugger;
+
+    }
+</script>
+

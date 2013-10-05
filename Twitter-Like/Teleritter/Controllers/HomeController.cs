@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using Teleritter.Models;
-using Teleritter.Controllers;
-using Teleritter.Models;
 using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
 using System.Net;
@@ -53,7 +51,7 @@ namespace Teleritter.Controllers
                 var message = "Show by tag.|" + text + "| Cached at " + DateTime.Now;
 
                 this.HttpContext.Cache.Add(text, viewModel, null, DateTime.Now.AddMinutes(15), TimeSpan.Zero, System.Web.Caching.CacheItemPriority.Normal, null);
-                this.HttpContext.Cache.Add(text + "message", "Cashed at " + DateTime.Now, null, DateTime.Now.AddMinutes(15), TimeSpan.Zero, System.Web.Caching.CacheItemPriority.Normal, null); 
+                this.HttpContext.Cache.Add(text + "message", message, null, DateTime.Now.AddMinutes(15), TimeSpan.Zero, System.Web.Caching.CacheItemPriority.Normal, null); 
             }
         }
 

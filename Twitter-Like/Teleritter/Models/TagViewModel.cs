@@ -17,7 +17,7 @@ namespace Teleritter.Models
                 return t => new TagViewModel
                 {
                     TagId = t.Id,
-                    Name = t.Name
+                    Name = t.Name,
                 };
             }
         }

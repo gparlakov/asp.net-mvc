@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
-using Teleritter.Models;
 
 namespace Teleritter.Models
 {
@@ -12,13 +12,14 @@ namespace Teleritter.Models
 
         public string Author { get; set; }
 
+        [UIHint("Tags")]
         public IEnumerable<TagViewModel> Tags { get; set; }
 
         public static Expression<Func<Telereet, TelereetViewModel>> FromTelereet
         {
             get
             {
-                return t => new TelereetViewModel                 
+                return t => new TelereetViewModel
                 {
                     Tags = t.Tags.AsQueryable().Select(TagViewModel.FromTag),
                     Text = t.Text,
@@ -29,5 +30,7 @@ namespace Teleritter.Models
         }
 
         public DateTime PostedOn { get; set; }
+
+        public int Id { get; set; }
     }
 }

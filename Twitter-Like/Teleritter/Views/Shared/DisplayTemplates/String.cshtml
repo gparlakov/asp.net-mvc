@@ -1,0 +1,2 @@
+﻿@model string
+<span class="custom-string-display" title="@Model">@(Model.Length > 20 ? Model.Substring(0, 20) + "..." : Model)</span>

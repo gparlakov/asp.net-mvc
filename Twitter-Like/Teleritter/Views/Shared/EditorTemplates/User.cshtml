@@ -1,0 +1,22 @@
+﻿@model Teleritter.Models.UserAdminViewModel
+
+<select id="Author">
+    <option>Users</option>
+</select>
+
+<script>
+    $(function () {
+        $.getJSON("/Admin/GetAllUsers")
+        .done(function (data) {
+            var items = [];
+            $.each(data, function (key, user) {
+                items.push("<option value='" + user.Id + "'>" + user.Username + "</option>");
+            });
+
+            $("#Author").append(items.join(""))
+        })
+        .fail(function (error) {
+            $("#Author").children().first().text("No users were foun in DB")
+        });
+    })
+</script>

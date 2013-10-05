@@ -33,3 +33,13 @@ input[type="checkbox"].input-validation-error {
   background-color: white;
   border-style:none;
 }
+
+span.custom-string-display {
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.wrap-words {
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+}
