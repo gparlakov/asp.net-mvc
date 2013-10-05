@@ -1,0 +1,66 @@
+﻿@model Teleritter.Models.NewTelereetViewModel
+<div class="row-fluid">
+    <div class="span6 offset2">
+        <fieldset>
+            <legend>New Telereet</legend>
+            @using (Ajax.BeginForm("PostNewTelereet", null, new AjaxOptions
+            {
+                OnSuccess = "addPost",
+                OnFailure = "displayError"
+            },
+            new
+            {
+                id = "newTelereetForm"
+            }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.LabelFor(m => m.Text)
+                @Html.TextAreaFor(m => m.Text, new { rows = 10, cols = 40 })
+                @Html.ValidationMessageFor(m => m.Text)
+
+                <div>
+                    @Html.LabelFor(m => m.Tags)
+                    @Html.EditorFor(m => m.Tags, new { id = "tags", name = "tags" })
+                </div>
+
+                <input type="submit" value="Post" />
+                <span class="text-error" id="error-from-new-telereet"/>
+            }
+            <input type="text" placeholder="add new tag" onchange="addTag()" id="newTagName" />
+        </fieldset>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval", "~/bundles/jqueryajax")
+
+<script>
+    //$(function () {
+    //    $("#newTelereetForm").on("change", "#newTagName", addTag);
+    //})
+
+    function addPost(data, response) {        
+        debugger;
+    }
+
+    function addTag(e) {
+        var newTagElem = $("#newTagName");
+        var newTag = newTag.val();
+        newTagElem.val("").attr("placeholder","Added! Remove manually.");
+
+        var tags = $("#Tags");
+
+        var currentTags = tags.val();
+        if (currentTags) {
+            tags.val(currentTags + ", " + newTag)
+        }
+        else {
+            tags.val(newTag);
+        }
+    }
+
+    function displayError(data, request) {
+        $("#error-from-new-telereet").text(data.status);
+        debugger;
+    }
+</script>
