@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Twitter.Models
+namespace Teleritter.Models
 {
     public class HomePageTelereetsViewModel
     {

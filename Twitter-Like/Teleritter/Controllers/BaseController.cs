@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using Teleritter.Data;
 using Teleritter.Data.Interfaces;
 
-namespace Twitter.Controllers
+namespace Teleritter.Controllers
 {
     public class BaseController : Controller
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Teleritter.Models;
 
-namespace Twitter.Models
+namespace Teleritter.Models
 {
     public class TelereetViewModel
     {

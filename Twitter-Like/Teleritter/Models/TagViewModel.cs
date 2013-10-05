@@ -2,7 +2,7 @@ using System;
 using System.Linq.Expressions;
 using Teleritter.Models;
 
-namespace Twitter.Models
+namespace Teleritter.Models
 {
     public class TagViewModel
     {

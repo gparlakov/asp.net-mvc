@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Twitter.Models.TelereetViewModel>
+﻿@model IEnumerable<Teleritter.Models.TelereetViewModel>
 
 @{
     ViewBag.Title = "Telereets";
@@ -23,13 +23,6 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    <form action="/Home/Post" method="post">
-        <div class="control-group">
-            <div class="control-label">New post</div>
-            <div class="controls">
-                <textarea name="newPostText" placeholder="What's on my mind?" />
-            </div>
-        </div>
-        <input type="submit" value="Post" />
-    </form>
+    @Html.Partial("_PostNewTelereetAjax", new Teleritter.Models.NewTelereetViewModel())
 }
+
