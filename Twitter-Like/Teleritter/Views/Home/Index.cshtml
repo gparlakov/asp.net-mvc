@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Twitter.Models.TelereetViewModel>
+
+@{
+    ViewBag.Title = "Telereets";
+}
+<h1>@ViewBag.Title.</h1>
+
+<h2>@ViewBag.Message</h2>
+
+<form action="/Home/Search" method="post">    
+    <input type="search" maxlength="100" name="text" placeholder="Search by tag name" />
+    <input type="submit" class="btn btn-mini btn-info" value="search"/>
+</form>
+
+@foreach (var item in Model)
+{
+    <div class="row-fluid">
+        <div class="span6">
+            @Html.Partial("_TelereetPartial", item)
+        </div>
+    </div>
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <form action="/Home/Post" method="post">
+        <div class="control-group">
+            <div class="control-label">New post</div>
+            <div class="controls">
+                <textarea name="newPostText" placeholder="What's on my mind?" />
+            </div>
+        </div>
+        <input type="submit" value="Post" />
+    </form>
+}
