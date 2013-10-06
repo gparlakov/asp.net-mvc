@@ -1,0 +1,9 @@
+﻿@model App.Models.LaptopViewModel
+
+<div>
+    <h3>@Model.Manufacturer @Model.Model</h3>
+    <img src="@Model.ImageUrl"/>
+    <div>
+        <a href="@Url.Action("Details", new { id = Model.Id })" class="btn">Price $@Model.Price.ToString("0.00")</a>
+    </div>
+</div>

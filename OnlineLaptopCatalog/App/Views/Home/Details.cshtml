@@ -1,0 +1,70 @@
+﻿@model App.Models.LaptopDetailsViewModel
+
+@{
+    ViewBag.Title = "Laptop System";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<h2>@Model.Manufacturer @Model.Model</h2>
+
+<div class="row-fluid">
+    <div class="span4">
+        <div><strong>Monitor: </strong> @Model.Monitor.ToString("0.0")''</div>
+        <div><strong>Ram: </strong> @Model.Ram GB</div>
+        <div><strong>Price: </strong> $@Model.Price</div>
+    </div>
+
+    <div class="span4">
+        <img src="@Model.ImageUrl" alt="@Model.Model @Model.Manufacturer" />
+    </div>
+
+    <div class="span4">
+        <div><strong>Weight: </strong> @Model.Weight kg</div>
+        <div><strong>Additional Parts: </strong> @Model.AdditionalParts</div>
+        <div><strong>Description: </strong> @Model.Description</div>
+    </div>
+</div>
+
+<div class="row-fluid" id="comments">
+    @foreach (var item in Model.Comments)
+    {
+        <div>
+            @item.Text
+            by @item.Author
+        </div>
+    }
+</div>
+
+<div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        using (Ajax.BeginForm("PostComment", new AjaxOptions
+        {
+            HttpMethod = "Post",
+            UpdateTargetId = "comments",
+            InsertionMode = InsertionMode.InsertAfter,
+            OnFailure = "postCommentFailed"
+        }))
+        {
+            @Html.Hidden("LaptopId",  Model.Id)
+            @Html.TextArea("Comment")
+            @Html.ValidationMessage("Comment")
+            <input type="submit" value="Post Comment" class="btn" />
+        
+            <span class="text-error" id="error-message"></span>
+        }
+        
+        @*@Ajax.ActionLink("Vote", "Home", new { id = Model.Id}, new AjaxOptions { });*@
+        <span>Vote</span>
+    }
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryajax")
+}
+<script>
+    function postCommentFailed(data, result) {
+        $("#error-message").text(data.statusText);
+    }
+</script>

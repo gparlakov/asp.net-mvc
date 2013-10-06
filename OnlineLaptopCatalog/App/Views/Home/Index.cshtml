@@ -1,0 +1,24 @@
+﻿@model IEnumerable<App.Models.LaptopViewModel>
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<div class="row-fluid">
+    @{
+        var i = 0;
+    }
+    @foreach (var item in Model)
+    {
+        i++;
+        @:<div class="span4">
+            @Html.Partial("_LaptopPartial", item)
+        @:</div>
+        if (i == 3)
+        {
+            i = 0;
+            @:</div><div class="row-fluid">
+        }
+    }
+</div>
