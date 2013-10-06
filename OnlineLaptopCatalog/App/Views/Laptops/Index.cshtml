@@ -1,0 +1,150 @@
+﻿@{
+    ViewBag.Title = "Available Laptops";
+}
+
+<h2>@ViewBag.Title</h2>
+<div class="row-fluid">
+    @using (Ajax.BeginForm("Search", new AjaxOptions
+    {
+        OnSuccess = "showResultsWindow"
+    }))
+    {
+        <div class="span3">
+            <span class="text-info">Model</span>
+            @(Html.Kendo().AutoComplete()
+                .Name("Model")
+                .Placeholder("Model...")
+                .MinLength(2)
+                .IgnoreCase(true)
+                .DataSource(data =>
+                {
+                    data.Read(r =>
+                    {
+                        r.Action("ReadModels", "Laptops");
+                        r.Data("onData");
+                    });
+                    data.ServerFiltering(true);
+                })
+            )
+        </div>
+
+        <div class="span3">
+            <span class="text-info">Manufacturer</span>
+            @(Html.Kendo().DropDownList()
+                .Name("Manufacturer")
+                .Delay(250)
+                .DataSource(data =>
+                {
+                    data.Read(r => r.Action("ReadManufacturers", "Laptops"));
+                })
+                .OptionLabel("All Manufacturers")
+            )
+        </div>
+
+        <div class="span3">
+            <span class="text-info">Max price</span>
+            @(Html.Kendo().NumericTextBox()
+                .Name("MaxPrice")
+                .Spinners(true)
+                .Value(1999)
+                .Max(9999)
+                .Min(399)
+            )
+        </div>
+
+        <div class="span3">
+            <input type="submit" value="search" class="btn btn-inverse" />
+        </div>
+    }
+</div>
+
+<div class="container-fluid">
+    @(Html.Kendo().ListView<App.Models.LaptopViewModel>()
+        .Name("AvailableLaptopsList")
+        .TagName("ul")
+        .ClientTemplateId("list-template")
+        .Pageable()
+        .DataSource(data =>
+        {
+            data.PageSize(5);
+            data.Model(m => m.Id("Id"));
+            data.Read(r => r.Action("Read", "Laptops"));
+        })
+    )
+</div>
+
+<script type="text/kendo-template" id="list-template">
+    <div class="row-fluid">
+        <div class="span4">
+            <img src="#: ImageUrl #" alt="#: Model # #: Manufacturer #" />
+        </div>
+        <div class="span4">
+            <h2>#: Model # #: Manufacturer #</h2>
+        </div>
+        <div class="span4">
+            <a href="/Home/Details/#: Id #" class="btn">Price: $#: Price #</a>
+        </div>
+    </div>
+</script>
+
+@(Html.Kendo().Window()
+    .Name("SearchResultsWindow")
+    .Modal(true)
+    .Visible(false)
+    .Draggable(true)
+    .Title("Found laptops:")
+    .Width(1000)
+    .Resizable(r => 
+    {
+        r.Enabled(true);
+        r.MinWidth(500);
+    })
+)
+<div id="wrapper">
+    <div id="result-list-view"></div>
+    <div id="pager-list-view"></div>
+</div>
+
+<script type="text/javascript">
+    function onData(d) {
+        return {
+            text: $("#Model").val()
+        }
+    }
+
+    function showResultsWindow(data) {
+        var window = $("#SearchResultsWindow").data("kendo-window");
+       
+        var dataSource = new kendo.data.DataSource({
+            data: data,
+            pageSize: 5
+        });
+
+        var list = $("#pager-list-view").kendoPager({
+            dataSource: dataSource
+        });
+
+        var pager =  $("#result-list-view").kendoListView({
+            dataSource: dataSource,
+            template: kendo.template($("#laptop-template").html())
+        });
+
+        window.content($("#wrapper")).open();
+    }
+</script>
+
+<script type="text/kendo-template" id="laptop-template">
+    <div class="row-fluid">
+        <div class="span4">
+            <img src="#: ImageUrl #" alt="#: Model # #: Manufacturer #" />
+        </div>
+        <div class="span4">
+            <h2>#: Model # #: Manufacturer #</h2>
+        </div>
+        <div class="span4">
+            <a href="/Home/Details/#: Id #" class="btn">Price: $#: Price #</a>
+        </div>
+    </div>
+</script>
+
+@Scripts.Render("~/bundles/jqueryajax")

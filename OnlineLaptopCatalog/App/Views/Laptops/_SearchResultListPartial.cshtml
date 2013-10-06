@@ -1,0 +1,24 @@
+﻿@model IEnumerable<App.Models.LaptopViewModel>
+
+@(Html.Kendo()
+    .ListView<App.Models.LaptopViewModel>()
+    .Name("SearchResults")
+    .BindTo(Model)
+    .Pageable(p => p.PageSizes(new int[]{5,10}))
+    .TagName("ul")
+    .ClientTemplateId("laptop-template")
+)
+
+<script type="text/kendo-template" id="laptop-template">
+    <div class="row-fluid">
+        <div class="span4">
+            <img src="#: ImageUrl #" alt="#: Model # #: Manufacturer #" />
+        </div>
+        <div class="span4">
+            <h2>#: Model # #: Manufacturer #</h2>
+        </div>
+        <div class="span4">
+            <a href="/Home/Details/#: Id #" class="btn">Price: $#: Price #</a>
+        </div>
+    </div>
+</script>
