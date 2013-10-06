@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -49,17 +50,36 @@ namespace Teleritter.Controllers
         //
         // POST: /Admin/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(TelereetAdminViewModel model)
         {
             try
             {
-                // TODO: Add insert logic here
+                if (ModelState.IsValid)
+                {
+                    //model.Tags = JsonConvert.DeserializeObject<IEnumerable<string>>(model.Tags);
 
-                return RedirectToAction("Index");
+                    var newTelereet = new Telereet 
+                    {
+                        Author = this.data.Users.All().Where(u => u.Id == model.Author).First(),
+                        Text = model.Text,
+                        PostedOn = model.PostedOn,
+                        Tags = GetTagsInDB(model.Tags).ToList()
+                    };
+
+                    this.data.Telreets.Add(newTelereet);
+                    this.data.SaveChanges();
+
+                    ViewBag.Message = "Created!";
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return View(model);
+                }
             }
             catch
             {
-                return View();
+                return View(model);
             }
         }
 
@@ -67,7 +87,12 @@ namespace Teleritter.Controllers
         // GET: /Admin/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var telereet = this.data.Telreets
+                .All()
+                .Select(TelereetAdminViewModel.FromTelereet)
+                .FirstOrDefault(t => t.Id == id);
+
+            return View(telereet);
         }
 
         //
@@ -138,8 +163,29 @@ namespace Teleritter.Controllers
 	        {
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "No tags could be read from database");
 	        }
-            
         }
-        
+
+        private IEnumerable<Tag> GetTagsInDB(IEnumerable<string> tagsCollection)
+        {
+            var tags = tagsCollection
+                .Select(t => new Tag { Name = t });
+
+            var tagsInBase = new List<Tag>();
+
+            foreach (var tag in tags)
+            {
+                var tagInBase = this.data.Tags.All()
+                    .FirstOrDefault(t => t.Name == tag.Name);
+
+                if (tagInBase == null)
+                {
+                    tagInBase = tag;
+                }
+
+                tagsInBase.Add(tagInBase);
+            }
+
+            return tagsInBase;
+        }
     }
 }

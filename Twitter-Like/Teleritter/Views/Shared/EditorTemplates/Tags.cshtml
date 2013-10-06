@@ -1,15 +1,15 @@
-﻿@model IEnumerable<Teleritter.Models.TagViewModel>
-<ul class="unstyled inline" id="Tags">
+﻿@model IEnumerable<string>
+<ul class="unstyled inline" id="tagsList">
     @foreach (var item in Model)
     {
         <li class="well-small">
-            @item.Name
+            @item
             <sup class="well">
                 @(Ajax.ActionLink(
                     "x",
                     "RemoveTagFromTelereet",
                     "Admin",
-                    new { tagId = item.TagId, telereetId = 0},
+                    new { tagName = item, telereetId = 0},
                     new AjaxOptions
                     {
                         OnBegin = "takeTelereetId"
@@ -21,8 +21,10 @@
     }
 </ul>
 
+<input type="hidden" name="Tags" id="tagsInput" value=""/>
+
 <select id="AllTags">
-    <option>Tags</option>
+    <option>Select tags to add</option>
 </select>
 
 <button class="btn btn-mini" form="" onclick="addTag()">+</button>
@@ -41,17 +43,66 @@
         .fail(function (error) {
             $("#AllTags").children().first().text("No users were foun in DB")
         });
+
+        $("#tagsList").on("click", "button.btn-danger", removeFromList);
     })
 
-    function addTag(){
+    function addTag() {
         var alltagsSelected = $("#AllTags");
-        $("#Tags").append("<li class='well'>" + alltagsSelected.val() + "<sup><button onclick='removeFromList()' form='' class='btn btn-mini btn-danger'>x</button></sup></li>")
+
+        var tag = alltagsSelected.val();
+        if (tag == "Select tags to add") {
+            return;
+        }
+
+        var tagsList = $("#tagsList")
+        var children = tagsList.children();
+        for (var i = 0; i < children.length; i++) {
+            var text = children[i].innerText;
+            if (text == tag + "x") {
+                return;
+            }
+        }
+
+        tagsList.append("<li class='well'>" + tag +
+            "<sup><button form='' class='btn btn-mini btn-danger'>x</button></sup></li>");
+
+        addTagToInput(tag);
+    }
+    
+    function addTagToInput(tag) {
+        var tagsInput = $("#tagsInput");
+
+        var tagsInputted = tagsInput.val() != "" ? tagsInput.val() : "[]";
+        var tags = JSON.parse(tagsInputted);
+
+        tags.push(tag);
+
+        tagsInput.val(JSON.stringify(tags));
     }
 
-    function removeFromList(e) {
-        var that = $(this);
-        debugger;
+    function removeTagFromInput(tag) {
+        var tagsInput = $("#tagsInput");
 
+        var tagsInputted = tagsInput.val() != "" ? tagsInput.val() : "[]";
+        var tags = JSON.parse(tagsInputted);
+
+        for (var i = 0; i < tags.length; i++) {
+            if (tags[i] == tag) {
+                tags.splice(i, 1);
+                break;
+            }
+        }
+
+        tagsInput.val(JSON.stringify(tags));
+    }
+    
+    function removeFromList(e) {
+        var tag = $(this).parent().parent();
+        var tagName = tag.text();
+        tagName = tagName.substr(0, tagName.length - 1);
+        removeTagFromInput(tagName);
+        tag.remove();
     }
 </script>
 

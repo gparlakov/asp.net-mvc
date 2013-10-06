@@ -11,20 +11,23 @@ namespace Teleritter.Models
     {
         public TelereetAdminViewModel()
         {
-            this.Tags = new List<TagViewModel>();
+            this.Tags = new List<string>();
         }
 
         public int Id { get; set; }
 
-        [UIHint("String")]
+        [UIHint("String"), DataType(DataType.MultilineText)]
         [Required, StringLength(100, ErrorMessage = "Text must be 2 to 100 symbols long!", MinimumLength = 2)]
         public string Text { get; set; }
 
-        [UIHint("User")]
-        public UserAdminViewModel Author { get; set; }
+        [UIHint("User"), Required]
+        public string Author { get; set; }
 
         [UIHint("Tags")]
-        public IEnumerable<TagViewModel> Tags { get; set; }
+        public IEnumerable<string> Tags { get; set; }
+
+        [UIHint("DateTime")]
+        public DateTime PostedOn { get; set; }
 
         public static Expression<Func<Telereet, TelereetAdminViewModel>> FromTelereet
         {
@@ -33,19 +36,12 @@ namespace Teleritter.Models
                 return t => new TelereetAdminViewModel
                 {
                     Id = t.Id,
-                    Tags = t.Tags.AsQueryable().Select(TagViewModel.FromTag),
+                    Tags = t.Tags.AsQueryable().Select(tag => tag.Name),
                     Text = t.Text,
-                    Author = new UserAdminViewModel
-                    {
-                        Id = t.Author.Id,
-                        Username = t.Author.UserName
-                    },
+                    Author =  t.Author.UserName,
                     PostedOn = t.PostedOn
                 };
             }
         }
-
-        [UIHint("DateTime")]
-        public DateTime PostedOn { get; set; }
     }
 }

@@ -21,7 +21,7 @@
 
                 <div>
                     @Html.LabelFor(m => m.Tags)
-                    @Html.EditorFor(m => m.Tags, new { id = "tags", name = "tags" })
+                    @Html.TextBoxFor(m => m.Tags, new { id = "tags", name = "tags" })
                 </div>
 
                 <input type="submit" value="Post" class="btn btn-primary"/>
@@ -46,7 +46,7 @@
         var newTag = newTagElem.val();
         newTagElem.val("").attr("placeholder","Added! Remove manually.");
 
-        var tags = $("#Tags");
+        var tags = $("#tags");
 
         var currentTags = tags.val();
         if (currentTags) {

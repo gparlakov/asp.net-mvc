@@ -9,7 +9,7 @@ namespace Teleritter.Models
     {
         [Required, StringLength(1000, ErrorMessage="Max length is 1000 symbols! Min is 2.", MinimumLength = 2)]
         public string Text { get; set; }
-        
+
         public string Tags { get; set; }
           
         public string NewTag { get; set; }
